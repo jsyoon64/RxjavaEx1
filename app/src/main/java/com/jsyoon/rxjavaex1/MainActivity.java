@@ -4,9 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-// TODO 1 Add library package
+// case 1 Add library package
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -18,13 +20,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO 2
+        // case 1
         Observable.just(1, 2, 3)
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(Observer);
+
+        // case 2
+        Single.just("Hello World")
+                .subscribe(getSingleObserver());
     }
 
-    // TODO 3
+
+    // case 1
     Observer<Integer> Observer = new Observer<Integer>() {
 
         @Override
@@ -48,4 +55,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
+    // case 2
+    private SingleObserver<String> getSingleObserver() {
+        return new SingleObserver<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e(TAG, "onSubscribe");
+            }
+
+            @Override
+            public void onSuccess(String value) {
+                Log.e(TAG, "onSuccess : " + value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: ");
+            }
+
+        };
+    }
+
 }
