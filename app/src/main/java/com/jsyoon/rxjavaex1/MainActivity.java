@@ -4,16 +4,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-// case 1 Add library package
+// Add library package
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
+    Observable<String> myObservable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +30,14 @@ public class MainActivity extends AppCompatActivity {
         // case 2
         Single.just("Hello World")
                 .subscribe(getSingleObserver());
-    }
 
+        // case 3
+        myObservable = Observable.just("Hello");
+        myObservable.subscribe(myObserver);
+        myObservable.subscribe(myObserver1);
+        myObservable.subscribe(myAction);
+
+    }
 
     // case 1
     Observer<Integer> Observer = new Observer<Integer>() {
@@ -77,4 +85,57 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    // case 3
+    Observer<String> myObserver = new Observer<String>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            Log.e("myObserver", "onSubscribe");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            // Called when the observable encounters an error
+        }
+
+        @Override
+        public void onComplete() {
+            // Called when the observable has no more data to emit
+        }
+
+        @Override
+        public void onNext(String s) {
+            // Called each time the observable emits data
+            Log.e("myObserver", s);
+        }
+    };
+
+    Observer<String> myObserver1 = new Observer<String>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            Log.e("myObserver1", "onSubscribe");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            // Called when the observable encounters an error
+        }
+
+        @Override
+        public void onComplete() {
+            // Called when the observable has no more data to emit
+        }
+
+        @Override
+        public void onNext(String s) {
+            // Called each time the observable emits data
+            Log.e("myObserver1", s);
+        }
+    };
+
+    Consumer<String> myAction = new Consumer <String>() {
+        @Override
+        public void accept(String s) throws Exception {
+            Log.e("My Action", s);
+        }
+    };
 }
